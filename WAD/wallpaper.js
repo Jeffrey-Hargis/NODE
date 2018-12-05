@@ -1,30 +1,18 @@
-const axios = require('axios');
-axios({
-        method: 'get',
-        url: 'https://dog.ceo/api/breeds/image/random',
-        responseType: 'stream'
-    })
-    .then(function (response) {
-        response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
+var wallpaper = require('wallpaper');
+var axios = require('axios');
+var downloadFile = require('download-file');
+
+axios.get('https://dog.ceo/api/breeds/image/random').then(function (response) {
+
+    var img = response.data.message;
+
+    var options = {
+        directory: "./images/dog/",
+        filename: "dog.jpg"
+    }
+
+    downloadFile(img, options, function (err) {
+        if (err) throw err
+        wallpaper.set('./images/dog/dog.jpg');
     });
-const wallpaper = require('wallpaper');
-
-(async () => {
-    await wallpaper.set('dog.jpg');
-
-    await wallpaper.get('/downloads/dogimage');
-    //=> '/Users/sindresorhus/unicorn.jpg'
-})();
-var download = require('download-file')
-
-var url = "https://dog.ceo/api/breeds/image/random"
-
-var options = {
-    directory: "/images/dogimage",
-    filename: "dog.jpg"
-}
-
-download(url, options, function (err) {
-    if (err) throw err
-    console.log("meow")
-})
+});
